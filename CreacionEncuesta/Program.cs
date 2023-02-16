@@ -43,6 +43,8 @@ builder.Services.AddAuthentication(d =>
 
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<ICreateEncuestaService, CreateEncuestaService>();
+builder.Services.AddScoped<IModEncuestaService, ModEncuestaService>();
+builder.Services.AddScoped<ISelectEncuestaService, SelectEncuestaService>();
 
 var app = builder.Build();
 

@@ -13,9 +13,9 @@ public partial class DetalleEncuestum
 
     public string Titulo { get; set; } = null!;
 
-    public int Requerido { get; set; }
+    public int? Requerido { get; set; }
 
     public string? Resultado { get; set; }
 
-    public int EstadoRegistro { get; set; }
+    public int? EstadoRegistro { get; set; }
 }
