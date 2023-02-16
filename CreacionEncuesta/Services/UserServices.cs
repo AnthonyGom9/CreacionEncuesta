@@ -33,7 +33,6 @@ namespace CreacionEncuesta.Services
                 var usuario = db.Usuarios.Where(d=> d.Usuario1 == model.Email && d.Password == spassword).FirstOrDefault();
 
                 if (usuario == null) return null;
-
                 userResponse.Email = usuario.Usuario1;
                 userResponse.Token = GetToken(usuario);
             }

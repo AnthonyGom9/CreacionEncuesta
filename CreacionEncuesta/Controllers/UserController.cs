@@ -9,16 +9,16 @@ namespace CreacionEncuesta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-//    [Authorize]
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private ICreateEncuestaService _createEncuestaService;
+        private ISelectEncuestaService _selectEncuestaService;
+        
 
-        public UserController(IUserService userService, ICreateEncuestaService createEncuestaService)
+        public UserController(IUserService userService, ISelectEncuestaService selectEncuestaService)
         {
             _userService = userService;
-            _createEncuestaService = createEncuestaService;
+            _selectEncuestaService = selectEncuestaService;
         }
 
         [HttpPost("login")]
@@ -39,20 +39,21 @@ namespace CreacionEncuesta.Controllers
             return Ok(respuesta);
         }
 
-        [HttpPost("Create/Encuesta")]
-        public async Task<IActionResult> CreateEncuesta([FromBody] CreateEncuestaRequest model)
+        [HttpGet("Encuesta")]
+        public IActionResult GetEncuesta([FromHeader] string Name)
         {
             Respuesta respuesta = new Respuesta();
-            var createresponse = await _createEncuestaService.CreateEncuesta(model);
+            var userresponse = _selectEncuestaService.SelectEncuesta(Name);   
 
-            if(createresponse == null)
+            if(userresponse == null)
             {
                 respuesta.Exito = 0;
-                respuesta.Mensaje = "Ocurrio un error al insertar los datos";
+                respuesta.Mensaje = "Ha ocurrido un error al consultar la encuesta";
                 return BadRequest(respuesta);
             }
             respuesta.Exito = 1;
-            respuesta.Data = createresponse;
+            respuesta.Data = userresponse;
+
             return Ok(respuesta);
         }
     }

@@ -17,15 +17,14 @@ namespace CreacionEncuesta.Services
         {
             CreateEncuestaResponse createEncuestaResponse = new CreateEncuestaResponse();
             var DetalleEncuesta = new DetalleEncuestum();
-            var createid = "encuesta_" + model.usuario_registro.ToString();
-            //if (model == null) return null;
-            
-                
-                foreach(DetalleEncuestum data in model.detalle)
+            try
+            {
+                var createid = "encuesta_" + model.usuario_registro.ToString();
+                foreach (DetalleEncuestum data in model.detalle)
                 {
-                     DetalleEncuesta = new DetalleEncuestum()
+                    DetalleEncuesta = new DetalleEncuestum()
                     {
-                         IdDetalle = createid,
+                        IdDetalle = createid,
                         Nombre = data.Nombre,
                         Titulo = data.Titulo,
                         Requerido = Convert.ToInt32(data.Requerido),
@@ -35,21 +34,26 @@ namespace CreacionEncuesta.Services
 
                     _context.DetalleEncuesta.Add(DetalleEncuesta);
                     await _context.SaveChangesAsync();
-                
-                
+
+
                 }
-            var Encuesta = new Encuestum()
+                var Encuesta = new Encuestum()
+                {
+                    Titulo = model.titulo,
+                    Descripcion = model.descripcion,
+                    DetalleEncuesta = createid,
+                    UsuarioRegistro = model.usuario_registro,
+                    EstadoRegistro = model.estado_registro
+                };
+                _context.Encuesta.Add(Encuesta);
+                await _context.SaveChangesAsync();
+                createEncuestaResponse.Link = "https://localhost:7190/api/User/Encuesta?Name=" + createid;
+                createEncuestaResponse.Nombre = "Nombre Encuesta";
+            }
+            catch(Exception ex)
             {
-                Titulo = model.titulo,
-                Descripcion = model.descripcion,
-                DetalleEncuesta = createid,
-                UsuarioRegistro = model.usuario_registro,
-                EstadoRegistro = model.estado_registro
-            };
-            _context.Encuesta.Add(Encuesta);
-            await _context.SaveChangesAsync();
-            createEncuestaResponse.Link = "https://localhost:7190/api/User/login";
-            createEncuestaResponse.Nombre = "Nombre Encuesta";
+                return null;
+            }
             return createEncuestaResponse;
         }
     }
